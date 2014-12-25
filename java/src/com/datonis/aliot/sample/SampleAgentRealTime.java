@@ -77,7 +77,7 @@ public class SampleAgentRealTime
             // this case.
             // Multiple sensors can exist for a type.
             // This constructor will throw an illegal sensor execption if conditions are not met.
-            sensor = new Sensor("8353298d72357ef747123219fcdcc5tfad6275f5", "SysMonMac", "System Monitor", "A monitor for CPU and Memory", metadata);
+            sensor = new Sensor("sensor_key", "SysMon", "System Monitor", "A monitor for CPU and Memory", metadata);
 
             // You can register multiple sensors and send data for them. First add the sensors and then call register.
             // In this case, there is only a single sensor object.
@@ -162,7 +162,7 @@ public class SampleAgentRealTime
             }
             try
             {
-                Thread.currentThread().sleep(2000);
+                Thread.currentThread().sleep(5000);
             }
             catch (InterruptedException e)
             {
