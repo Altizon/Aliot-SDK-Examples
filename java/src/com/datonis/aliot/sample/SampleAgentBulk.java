@@ -1,17 +1,23 @@
 package com.datonis.aliot.sample;
 
 import org.json.simple.JSONObject;
-import java.lang.management.ManagementFactory;
-import com.sun.management.OperatingSystemMXBean;
 
+import java.lang.management.ManagementFactory;
+import java.util.concurrent.LinkedBlockingQueue;
+
+import com.sun.management.OperatingSystemMXBean;
 import com.altizon.aliot.gateway.AliotCommunicator;
 import com.altizon.aliot.gateway.AliotConfiguration;
 import com.altizon.aliot.gateway.AliotGateway;
+import com.altizon.aliot.gateway.AliotMessageListener;
+import com.altizon.aliot.gateway.AliotUtil;
 import com.altizon.aliot.gateway.BulkData;
 import com.altizon.aliot.gateway.entity.Sensor;
 import com.altizon.aliot.gateway.exception.AliotException;
 import com.altizon.aliot.gateway.exception.IllegalSensorException;
 import com.altizon.aliot.gateway.exception.InvalidRequestException;
+import com.altizon.aliot.gateway.message.AlertType;
+import com.altizon.aliot.gateway.message.AliotInstruction;
 
 /**
  * This is a sample agent that demonstrates how to push Data to Datonis. In this example we will push data in bulk to the Datonis platform.
@@ -24,23 +30,43 @@ import com.altizon.aliot.gateway.exception.InvalidRequestException;
  * @author Ranjit Nair
  * 
  */
-public class SampleAgentBulk
+public class SampleAgentBulk implements AliotMessageListener
 {
 
     private static Sensor sensor;
     private static AliotGateway gateway;
     private static int NUM_EVENTS = 57;
+    private static LinkedBlockingQueue<AliotInstruction> instructionQueue = new LinkedBlockingQueue<AliotInstruction>();
 
     /**
      * @param args
      * @throws InvalidRequestException
      * @throws IllegalSensorException
+     * @throws AliotException 
      */
-    public static void main(String[] args) throws IllegalSensorException, InvalidRequestException
+    public static void main(String[] args) throws IllegalSensorException, InvalidRequestException, AliotException
     {
+        // First construct an AliotConfiguration object using your downloaded access and secret keys.
+        // The keys are available in the platform portal under your license plan.
+        AliotConfiguration config = new AliotConfiguration("your_access_key", "your_secret_key");
+
+        // Construct the Gateway that helps us send various types of events to Datonis
+        gateway = new AliotGateway(config);
 
         SampleAgentBulk bulkAgent = new SampleAgentBulk();
         bulkAgent.register();
+
+        if ((config.getProtocol() == AliotConfiguration.MQTT) || config.getProtocol() == AliotConfiguration.MQTTS) {
+            // Bi-directional communication is only possible with MQTT/Secure MQTT
+            gateway.addMessageListener(bulkAgent);
+            bulkAgent.startInstructionHandler();
+        }
+
+        // Enable this condition if you want to send alerts
+        if (false) {
+            bulkAgent.transmitDemoAlerts();
+        }
+
         bulkAgent.transmitDataInBulk();
         System.out.println("Exiting");
         System.exit(0);
@@ -53,10 +79,7 @@ public class SampleAgentBulk
         try
         {
 
-            // First construct an AliotConfiguration object using your downloaded access and secret keys.
-            // The keys are available in the platform portal under your license plan.
-            AliotConfiguration config = new AliotConfiguration("your_access_key", "your_secret_key");
-            gateway = new AliotGateway(config);
+            
 
             // Decide what the metadata format of your sensor should be. This will show up as the sensor parameters that
             // you are pushing
@@ -95,11 +118,6 @@ public class SampleAgentBulk
             System.out.println("Transmitted a heartbeat");
 
         }
-        catch (AliotException e)
-        {
-            System.out.println(e.getMessage());
-            return false;
-        }
         catch (IllegalSensorException e)
         {
             System.out.println(e.getMessage());
@@ -111,6 +129,30 @@ public class SampleAgentBulk
             return false;
         }
         return true;
+    }
+
+    private void startInstructionHandler() {
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                
+                while (true) {
+                    AliotInstruction instruction = instructionQueue.poll();
+                    if (instruction != null) {
+                        System.out.println("Received instruction for sensor: " + instruction.getSensorKey() + " from Datonis: " + instruction.getInstruction().toJSONString());
+                        JSONObject data = new JSONObject();
+                        data.put("demoKey", "demoValue");
+                        int ret = gateway.transmitAlert(instruction.getAlertKey(), instruction.getSensorKey(), AlertType.WARNING, "Demo warning, instruction received and logged!", data);
+                        if (ret != AliotCommunicator.OK) {
+                            System.err.println("Could not send Acknowlegement for instruction back to datonis. Error: " + AliotUtil.getMappedErrorMessage(ret));
+                        } else {
+                            System.out.println("Sent an instruction acknowlegement back to Datonis!");
+                        }
+                    }
+                }
+            }
+        });
+        t.start();
     }
 
     private JSONObject getSystemInfo()
@@ -158,6 +200,27 @@ public class SampleAgentBulk
 
         }
 
+    }
+
+    private void transmitAlert(AlertType alertType) {
+        JSONObject data = new JSONObject();
+        data.put("demoKey", "demoValue");
+        
+        int ret = gateway.transmitAlert(sensor.getKey(), alertType, "This is an example " + alertType.toString() + " alert!", data);
+        if (ret == AliotCommunicator.OK) {
+            System.out.println("Sent example " + alertType.toString() + " alert!");
+        } else {
+            System.err.println("Could not send example " + alertType.toString() + " alert: " + AliotUtil.getMappedErrorMessage(ret));
+        }
+    }
+
+    public void transmitDemoAlerts() {
+        System.out.println("Transmitting demo alerts!");
+
+        transmitAlert(AlertType.INFO);
+        transmitAlert(AlertType.WARNING);
+        transmitAlert(AlertType.ERROR);
+        transmitAlert(AlertType.CRITICAL);
     }
 
     public void transmitData(Sensor sensor, BulkData bulkData) throws IllegalSensorException
@@ -225,4 +288,9 @@ public class SampleAgentBulk
         System.out.println("Transmitted data");
 
     }
+
+    @Override
+    public void messageReceived(AliotInstruction instruction) {
+        instructionQueue.add(instruction);
+    }    
 }
