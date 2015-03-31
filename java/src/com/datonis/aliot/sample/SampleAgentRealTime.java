@@ -48,6 +48,9 @@ public class SampleAgentRealTime implements AliotMessageListener
         // The keys are available in the platform portal under your license plan.
         AliotConfiguration config = new AliotConfiguration("your_access_key", "your_secret_key");
 
+        //If you wish to use bidirectional data transfer, please use MQTT. That can be configured like this
+        config = new AliotConfiguration("your_access_key", "your_secret_key", AliotConfiguration.MQTTS);
+        
         // Construct the Gateway that helps us send various types of events to Datonis
         gateway = new AliotGateway(config);
 
