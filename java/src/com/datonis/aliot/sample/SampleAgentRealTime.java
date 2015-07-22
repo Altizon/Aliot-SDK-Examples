@@ -64,7 +64,7 @@ public class SampleAgentRealTime
                 public void handleInstruction(AliotGateway gateway, AliotInstruction instruction) {
                     System.out.println("Received instruction for sensor: " + instruction.getSensorKey() + " from Datonis: " + instruction.getInstruction().toJSONString());
                     JSONObject data = new JSONObject();
-                    data.put("demoKey", "demoValue");
+                    data.put("execution_status", "success");
                     int ret = gateway.transmitAlert(instruction.getAlertKey(), instruction.getSensorKey(), AlertType.WARNING, "Demo warning, instruction received and logged!", data);
                     if (ret != AliotCommunicator.OK) {
                         System.err.println("Could not send Acknowlegement for instruction back to datonis. Error: " + AliotUtil.getMappedErrorMessage(ret));
