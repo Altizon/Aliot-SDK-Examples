@@ -93,7 +93,7 @@ public class SampleAgent {
             // Use a logical 'type' to describe the Data Stream. For instance, System Monitor in this case.
             // Multiple streams can exist for a type.
             // This constructor will throw an illegal stream exception if conditions are not met.
-            strean = new DataStream("stream_key", "SysMon", "System Monitor", "A monitor for CPU and Memory", metadata);
+            stream = new DataStream("stream_key", "SysMon", "System Monitor", "A monitor for CPU and Memory", metadata);
 
             // Comment the line earlier and un-comment this line if you want this stream to be bi-directional i.e. supports receiving instructions (Note: Only works with MQTT/MQTTs)
             // stream = new DataStream("stream_key", "SysMon", "System Monitor", "A monitor for CPU and Memory", metadata, true);
