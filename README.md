@@ -32,7 +32,7 @@ mvn package
 
 You can then run example as follows:
 
-java -jar target/aliot-agent-1.0-jar-with-dependencies.jar -Dlog4j.properties=src/main/resources/log4j.properties -Daliot.properties=src/main/resources/aliot.properties 
+java -Dlog4j.properties=src/main/resources/log4j.properties -Daliot.properties=src/main/resources/aliot.properties -jar target/aliot-agent-1.0-jar-with-dependencies.jar
 
 The file src/main/resources/aliot.properties contains the configuration required for the Agent to work.
 
