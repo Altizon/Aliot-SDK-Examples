@@ -2,7 +2,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.altizon.agent</groupId>
-  <artifactId>aliot-agent</artifactId>
+  <artifactId>Aliot-SDK-Example</artifactId>
   <packaging>jar</packaging>
   <version>1.0</version>
   <name>aliot-agent</name>
@@ -47,7 +47,7 @@
     <dependency>
       <groupId>io.datonis.sdk</groupId>
       <artifactId>aliot-sdk</artifactId>
-      <version>3.0</version>
+      <version>3.1</version>
     </dependency>
   </dependencies>
   <build>

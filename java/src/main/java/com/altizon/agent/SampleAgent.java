@@ -10,6 +10,7 @@ import io.datonis.sdk.message.AliotInstruction;
 
 import java.lang.management.ManagementFactory;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,7 +85,7 @@ public class SampleAgent {
             // In this example we will be pushing cpu and memory utilization.
             // We therefore declare them in a JSON schema format.
             // Obviously escaped so that java does not complain
-            String metadata = "{\"cpu\": {\"type\":\"number\"}, \"mem\": {\"type\":\"number\"}}";
+            
 
             // Create a Thing Object.
             // It is extremely important to have unique Thing keys or collisions may occur and data could get overwritten.
@@ -93,10 +94,10 @@ public class SampleAgent {
             // Use a logical 'type' to describe the Thing. For instance, System Monitor in this case.
             // Multiple things can exist for a type.
             // This constructor will throw an illegal thing exception if conditions are not met.
-            thing = new Thing("thing_key", "SysMon", "System Monitor", "A monitor for CPU and Memory", metadata);
+            //thing = new Thing("Your Thing's key goes here", "SysMon", "A monitor for CPU and Memory");
 
             // Comment the line earlier and un-comment this line if you want this thing to be bi-directional i.e. supports receiving instructions (Note: Only works with MQTT/MQTTs)
-            // thing = new Thing("thing_key", "SysMon", "System Monitor", "A monitor for CPU and Memory", metadata, true);
+             thing = new Thing("9e368bb1t2", "SysMon", "A monitor for CPU and Memory", true);
 
             // You can register multiple things and send data for them.
             // First add the things and then call register.
@@ -144,12 +145,19 @@ public class SampleAgent {
         obj.put("mem", mem);
         return obj;
     }
+    
+    private JSONArray createWaypoint(double latitude, double longitude) {
+        JSONArray waypoint = new JSONArray();
+        waypoint.add(latitude);
+        waypoint.add(longitude);
+        return waypoint;
+    }
 
     private void transmitAlert(AlertType alertType) {
         JSONObject data = new JSONObject();
         data.put("demoKey", "demoValue");
 
-        if (!gateway.transmitAlert(thing.getKey(), alertType, "This is an example " + alertType.toString() + " alert!", data)) {
+        if (gateway.transmitAlert(thing.getKey(), alertType, "This is an example " + alertType.toString() + " alert!", data)) {
             logger.info("Sent example " + alertType.toString() + " alert!");
         } else {
             logger.error("Could not send example " + alertType.toString() + " alert");
@@ -169,13 +177,30 @@ public class SampleAgent {
             // Construct the JSON packet to be sent. This has to match the
             // metadata structure.
             JSONObject data = getSystemInfo();
-            // Transmit the data. There is also a method to
-            // specify the timestamp of the data packet if the transmission is delayed. 
-            // The syntax is gateway.transmitData(thing, data, timestamp)
-            if (!gateway.transmitData(thing, data)) {
+            //un-comment below line to create waypoints.
+            //JSONArray waypoint = createWaypoint(18.52 + Math.random(), 73.85 + Math.random());
+            
+            // Transmit the data and waypoint. There is also a method to
+            // specify the timestamp of the data packet if the transmission is delayed.
+            // The syntax is gateway.transmitData(thing, data, waypoint, timestamp)
+            // You can transmit, either data or waypoint, or both. Atleast one should be present
+            // from data and waypoint. Pass data or waypoint as null, if you don't want to send it.
+            // Following are three ways to transmit data.
+            // 1st way
+            if (!gateway.transmitData(thing, data, null)) {
                 logger.warn("Could not transmit packet : " + count + " value " + data.toJSONString());
             }
-
+            // 2nd way. Note un-comment the commented code for creating the waypoint
+            //if (!gateway.transmitData(thing, null, waypoint)) {
+            //    logger.warn("Could not transmit packet : " + count + " waypoint " + waypoint.toJSONString());
+            //}
+            
+            // 3rd way. Note un-comment the commented code for creating the waypoint
+            //if (!gateway.transmitData(thing, data, waypoint)) {
+            //    logger.warn("Could not transmit packet : " + count + " data: " + data.toJSONString()  + ", waypoint: " + waypoint.toJSONString());
+            //}
+      
+    
             heartbeat++;
             if (heartbeat == 300) {
                 gateway.transmitHeartbeat();
@@ -190,3 +215,4 @@ public class SampleAgent {
         }
     }
 }
+
