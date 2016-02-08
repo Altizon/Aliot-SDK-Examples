@@ -34,7 +34,10 @@ You can then run example as follows:
 
 java -Dlog4j.properties=src/main/resources/log4j.properties -Daliot.properties=src/main/resources/aliot.properties -jar target/Aliot-SDK-Example-1.0-jar-with-dependencies.jar
 
-The file src/main/resources/aliot.properties contains the following configuration required for the Agent to work.
+The file src/main/resources/aliot.properties contains the following configuration required for the Agent to work:
+
 1) access and secret key: A key pair with the Agent role is automatically created in your Datonis account. You can use this or create a new one from the Datonis Web UI.
+
 2) protocol: Valid options are 'http' for one way communication or 'mqtt' for bi-directional communication with Datonis. Choosing 'mqtt' will allow your agent to accept instructions from Datonis. Instructions can be fired from the Datonis Web UI.
+
 3) bulk_transmit: Uses batching and compression to optimize data transfers between the agent and Datonis.
