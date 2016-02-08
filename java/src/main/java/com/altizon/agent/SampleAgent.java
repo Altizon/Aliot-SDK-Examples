@@ -94,10 +94,10 @@ public class SampleAgent {
             // Use a logical 'type' to describe the Thing. For instance, System Monitor in this case.
             // Multiple things can exist for a type.
             // This constructor will throw an illegal thing exception if conditions are not met.
-            //thing = new Thing("Your Thing's key goes here", "SysMon", "A monitor for CPU and Memory");
+            thing = new Thing("Your Thing's key goes here", "SysMon", "A monitor for CPU and Memory");
 
             // Comment the line earlier and un-comment this line if you want this thing to be bi-directional i.e. supports receiving instructions (Note: Only works with MQTT/MQTTs)
-             thing = new Thing("9e368bb1t2", "SysMon", "A monitor for CPU and Memory", true);
+            // thing = new Thing("Your Thing's key goes here", "SysMon", "A monitor for CPU and Memory", true);
 
             // You can register multiple things and send data for them.
             // First add the things and then call register.
