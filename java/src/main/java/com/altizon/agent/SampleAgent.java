@@ -8,15 +8,12 @@ import io.datonis.sdk.exception.IllegalThingException;
 import io.datonis.sdk.message.AlertType;
 import io.datonis.sdk.message.AliotInstruction;
 
-import java.lang.management.ManagementFactory;
+import java.util.Random;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.sun.management.OperatingSystemMXBean;
-
 /**
  * A sample program that sends events to Datonis
  * 
@@ -78,7 +75,7 @@ public class SampleAgent {
         }
     }
 
-    private boolean startGateway() {
+	private boolean startGateway() {
         try {
             // Decide what the metadata format of your thing should be.
             // This will show up as the thing parameters that you are pushing on Datonis.
@@ -94,7 +91,7 @@ public class SampleAgent {
             // Use a logical 'type' to describe the Thing. For instance, System Monitor in this case.
             // Multiple things can exist for a type.
             // This constructor will throw an illegal thing exception if conditions are not met.
-            thing = new Thing("Your Thing's key goes here", "Computer", "A monitor for CPU and Memory");
+            thing = new Thing("t75fd554e6", "LivingRoom", "The living room temperature and humidity device.");
 
             // Comment the line earlier and un-comment this line if you want this thing to be bi-directional i.e. supports receiving instructions (Note: Only works with MQTT/MQTTs)
             // thing = new Thing("Your Thing's key goes here", "SysMon", "A monitor for CPU and Memory", true);
@@ -134,15 +131,10 @@ public class SampleAgent {
         });
     }
 
-    private JSONObject getSystemInfo() {
-        OperatingSystemMXBean os = (OperatingSystemMXBean)ManagementFactory.getOperatingSystemMXBean();
-        long mem = (os.getFreePhysicalMemorySize() / (1024 * 1024));
-        // Not accurate but sufficient for demonstration
-        double cpu = ((os.getSystemLoadAverage() / os.getAvailableProcessors()) * 10);
-
+    private JSONObject getMetric() {
         JSONObject obj = new JSONObject();
-        obj.put("cpu_usage", cpu);
-        obj.put("memory_usage", mem);
+        obj.put("temperature", new Random().nextLong());
+        obj.put("humidity", new Random().nextDouble());
         return obj;
     }
     
@@ -176,7 +168,7 @@ public class SampleAgent {
         for (int count = 1; count <= NUM_EVENTS; count++) {
             // Construct the JSON packet to be sent. This has to match the
             // metadata structure.
-            JSONObject data = getSystemInfo();
+            JSONObject data = getMetric();
             //un-comment below line to create waypoints.
             //JSONArray waypoint = createWaypoint(18.52 + Math.random(), 73.85 + Math.random());
             
@@ -187,7 +179,7 @@ public class SampleAgent {
             // from data and waypoint. Pass data or waypoint as null, if you don't want to send it.
             // Following are three ways to transmit data.
             // 1st way
-            if (!gateway.transmitData(thing, data, null)) {
+            if (!gateway.transmitCompressedData(thing, data, null)) {
                 logger.warn("Could not transmit packet : " + count + " value " + data.toJSONString());
             }
             // 2nd way. Note un-comment the commented code for creating the waypoint
