@@ -4,9 +4,9 @@ import math
 import random
 import sys
 import time
+import os
 
 from com.altizon.aliot import *
-
 
 def my_instruction_handler(gateway, timestamp, thing_key, alert_key, instruction):
     logging.info('Successfully handled incoming instruction: ' + json.dumps(instruction))
@@ -59,9 +59,9 @@ def main():
         logging.info("Successfully connected to Datonis")
     
     thing = Thing()
-    thing.thing_key = '92b8cc5db1'
-    thing.name = 'Temp'
-    thing.description = 'Thing for compressor'
+    thing.thing_key = 'a21e47c9a2'
+    thing.name = 'LivingRoom'
+    thing.description = 'The living room temperature and humidity device.'
     
     # Uncomment lines below if you are using MQTT/MQTTs and require instruction execution support
     # thing.bi_directional = True
@@ -84,7 +84,7 @@ def main():
                 logging.warn("Could not send hearbeat for thing: " + thing.name)
             else:
                 logging.info("Heartbeat sent for thing: " + thing.name)
-        data = {'pressure': math.ceil(random.uniform(0, 100)), 'temperature': math.ceil(random.uniform(0, 100))}
+        data = {'temperature': math.ceil(random.uniform(0, 100)), 'humidity': math.ceil(random.uniform(0, 100))}
 	#waypoint format: [latitude, longitude]
 	waypoint = [random.uniform(18, 19), random.uniform(73, 74)]
 	#pass data as None to send only waypoint.
