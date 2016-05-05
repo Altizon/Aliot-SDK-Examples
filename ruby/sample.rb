@@ -7,7 +7,7 @@ conf = Aliot::AliotConfiguration.new("93a768t53fd3e21tf7cc357c9b3f2f446297d872",
 #initialize the gateway
 gateway = Aliot::AliotGatewayHttp.new(conf)
 #Aliot::Thing.new(key, name, description)
-thing = Aliot::Thing.new("742923439d", "Compressor 1", "Example Compressor 1", true)
+thing = Aliot::Thing.new("742923439d", "Compressor 1", "Example Compressor 1")
 #register the thing
 gateway.register(thing)
 
