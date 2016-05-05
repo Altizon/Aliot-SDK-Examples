@@ -3,11 +3,11 @@ require 'aliot/aliot_configuration'
 require 'aliot/aliot_gateway_http'
 
 #Aliot::AliotConfiguration.new(access_key, secrete_key, protocol = "http", ssl = false, url=nil)
-conf = Aliot::AliotConfiguration.new("72f2a8322fca8dc4ttt321t49f83at58f8t78t54", "cf5a1eba58756db5ta741t7a25ca686eba3acdaf")
+conf = Aliot::AliotConfiguration.new("93a768t53fd3e21tf7cc357c9b3f2f446297d872", "cefdf5e449c93e32567155f6ddct9d47e38tfd57")
 #initialize the gateway
 gateway = Aliot::AliotGatewayHttp.new(conf)
 #Aliot::Thing.new(key, name, description)
-thing = Aliot::Thing.new("3e2b1f8t81", "LivingRoom", "The living room temperature and humidity device.")
+thing = Aliot::Thing.new("742923439d", "Compressor 1", "Example Compressor 1", true)
 #register the thing
 gateway.register(thing)
 
@@ -17,7 +17,7 @@ while true
     # Send heart beat in between (optional)
     gateway.send_heart_beat(thing)
   end
-  data = {:temperature => , :humidity => }
+  data = {:temperature => rand * 100, :pressure => rand * 100}
   #waypoint format : [latitude, longitude]
   waypoint = [(18.52 + rand/10), (73.85 + rand/10)];
   timestamp = Time.now.to_i * 1000;
