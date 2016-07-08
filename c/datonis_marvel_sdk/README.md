@@ -5,5 +5,5 @@
 * Download your default key pair (Access and Secret key) and mention that in sample_apps/datonis_demo/src/main.c
 * Also update the Thing Key of the thing you created on Datonis
 * make
-* Open a terminal and connect to the Seriao Console at /dev/ttyUSB1
+* Open a terminal and connect to the Serial Console at /dev/ttyUSB1
 * sudo ./sdk/tools/OpenOCD/ramload.py ./bin/mw302_rd/datonis_demo.axf (To load in SRAM)
