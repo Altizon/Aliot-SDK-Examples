@@ -7,7 +7,6 @@
 -include .config
 include build/aws_starter_sdk.mk
 
-#subdir-y += sdk/external/aws_iot
 subdir-y += sdk/external/freertos
 subdir-y += sdk/external/lwip
 subdir-y += sdk/external/datonis

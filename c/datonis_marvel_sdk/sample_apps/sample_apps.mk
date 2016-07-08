@@ -4,9 +4,7 @@
 # The list of sample_apps
 
 subdir-y                         += sample_apps/hello_world
-#subdir-y                         += sample_apps/aws_starter_demo
 subdir-y                         += sample_apps/datonis_demo
-#subdir-y			 			 += sample_apps/connected_maraca
 subdir-y                         += sample_apps/io_demo/adc
 subdir-y                         += sample_apps/io_demo/gpio
 subdir-y                         += sample_apps/io_demo/uart/uart_echo_demo
