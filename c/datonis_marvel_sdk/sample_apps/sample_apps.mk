@@ -1,0 +1,12 @@
+# Copyright (C) 2008-2016, Marvell International Ltd.
+# All Rights Reserved.
+
+# The list of sample_apps
+
+subdir-y                         += sample_apps/hello_world
+subdir-y                         += sample_apps/datonis_demo
+subdir-y                         += sample_apps/io_demo/adc
+subdir-y                         += sample_apps/io_demo/gpio
+subdir-y                         += sample_apps/io_demo/uart/uart_echo_demo
+subdir-y                         += sample_apps/net_demo/ntpc_demo
+
