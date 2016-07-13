@@ -13,7 +13,7 @@ Installing gem in your system:
 
 cd <path-to-aliot-gem>
 
-gem install aliot-3.0.0.gem 
+gem install aliot-3.0.2.gem 
 
 You can then run example as follows:
 
