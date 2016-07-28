@@ -3,7 +3,8 @@
 
 libs-y += libdatonis
 
-libdatonis-objs-y := MQTTPacket/src/MQTTSerializePublish.c \
+ifeq ($(communication_mode),mqtt)
+  libdatonis-objs-y := MQTTPacket/src/MQTTSerializePublish.c \
 	MQTTPacket/src/MQTTUnsubscribeClient.c \
 	MQTTPacket/src/MQTTConnectClient.c \
 	MQTTPacket/src/MQTTPacket.c \
@@ -18,5 +19,19 @@ libdatonis-objs-y := MQTTPacket/src/MQTTSerializePublish.c \
 	Aliot/jsonutils.c \
 	Implementation/MQTTMbed.c \
 	Implementation/timeutil_mbed.c
+	
 
-libdatonis-cflags-y := -I $(d)/MQTTPacket/src -I $(d)/Aliot -I $(d)/Implementation -D_COMMUNICATION_MODE_MQTT_=1
+  libdatonis-cflags-y := -I $(d)/MQTTPacket/src -I $(d)/Aliot -I $(d)/Implementation -D_COMMUNICATION_MODE_MQTT_=1
+
+else
+  libdatonis-objs-y := Aliot/aliotgateway.c \
+	Aliot/aliotgateway_http.c \
+	Aliot/aliotutil.c \
+	Aliot/hmac.c \
+	Aliot/jsmn.c \
+	Aliot/jsonutils.c \
+	Implementation/MQTTMbed.c \
+	Implementation/timeutil_mbed.c
+
+  libdatonis-cflags-y :=  -I $(d)/Aliot -I $(d)/Implementation -D_COMMUNICATION_MODE_HTTP_=1
+endif

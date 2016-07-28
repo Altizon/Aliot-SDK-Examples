@@ -39,7 +39,7 @@ static char client_id[50];
 
 void handle_http_ack(MessageData *md) {
     MQTTMessage *message = md->message;
-    char buf[100];
+    char buf[1000];
 
     sprintf(buf, "%.*s", (int)message->payloadlen, (char *)message->payload);   
     parse_http_ack(buf, http_ack_context, &http_return_code);
@@ -77,7 +77,7 @@ int connect_datonis_instance(char *server) {
 }
 
 int connect_datonis() {
-    return connect_datonis_instance("mqtt.altizon.com");
+    return connect_datonis_instance("mqtt.datonis.io");
 }
 
 int disconnect_datonis() {
@@ -132,6 +132,7 @@ int encode_and_send_data(enum QoS qos, char *topic, char *json, int flag) {
     strcat(json, ",");
     putJSONStringAndComma(json, "hash", hash);
     putJSONStringAndComma(json, "access_key", configuration.access_key);
+    putJSONDoubleAndComma(json, "aliot_protocol_version", 2.0);
     json[strlen(json) - 1] = '\0'; 
     /* Now end the JSON */
     endJSON(json);

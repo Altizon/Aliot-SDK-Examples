@@ -244,7 +244,11 @@ int ConnectNetwork(Network* n, char* addr, int port)
 	n->my_socket = create_socket();
 	if (n->my_socket != -1) {
 		rc = connect_socket(n->my_socket, addr, port);
+	} else {
+		wmprintf("Could not create socket!\n\r");
 	}
+
+	wmprintf("Return code for connect network: %s:%d, %d\n\r", addr, port, rc);
 
 
 	/*

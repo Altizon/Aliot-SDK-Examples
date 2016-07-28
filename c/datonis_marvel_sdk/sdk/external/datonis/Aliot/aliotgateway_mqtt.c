@@ -13,7 +13,7 @@
 #include <string.h>
 #include <stdio.h>
 #include "timeutil.h"
-#include <wmstdio.h>
+#include "LZFcompress.h"
 
 /** Change this string on every new client you run **/
 #define CLIENT_ID_PREFIX  "_EX_CLIENT_"
@@ -39,7 +39,7 @@ static char client_id[50];
 
 void handle_http_ack(MessageData *md) {
     MQTTMessage *message = md->message;
-    char buf[100];
+    char buf[1000];
 
     sprintf(buf, "%.*s", (int)message->payloadlen, (char *)message->payload);   
     parse_http_ack(buf, http_ack_context, &http_return_code);
@@ -48,8 +48,7 @@ void handle_http_ack(MessageData *md) {
 int connect_datonis_instance(char *server) {
     int rc = -1;
 
-    sprintf(client_id, "%s%lld", CLIENT_ID_PREFIX, get_time_ms());
-    wmprintf("Client id is: %s\n\r", client_id);
+    sprintf(client_id, "%s%0.0f", CLIENT_ID_PREFIX, get_time_ms());
 
     NewNetwork(&n);
     ConnectNetwork(&n, server, 1883);
@@ -68,7 +67,7 @@ int connect_datonis_instance(char *server) {
     if (rc != ERR_OK) {
         return rc;
     }
-    wmprintf("\nSuccessfully connected to Datonis\n\r");
+    printf("\nSuccessfully connected to Datonis\n");
 
     strcpy(http_ack_context, "");
 
@@ -78,7 +77,7 @@ int connect_datonis_instance(char *server) {
 }
 
 int connect_datonis() {
-    return connect_datonis_instance("mqtt.altizon.com");
+    return connect_datonis_instance("mqtt.datonis.io");
 }
 
 int disconnect_datonis() {
@@ -87,16 +86,33 @@ int disconnect_datonis() {
 }
 
 int send_data(enum QoS qos, char *topic, char *data, int flag) {
+    unsigned char compressedBuffer[MAX_BLOCKSIZE + MAX_HDR_SIZE + 16];
     int ret = -1;
     MQTTMessage message;
-    unsigned long long begin, end;
+    double begin, end;
     message.qos = qos;
+    if(flag == 1 && strlen(data)>1024)
+    {
+        ssize_t len = 0;
+        printf("\nOriginal Data Size: %zd", strlen(data));
+	begin = get_time_ms();
+	len = LZFcompress_data(data,compressedBuffer);
+	end = get_time_ms();
+	printf("\nCompression Time: %lf", (end - begin));
+	printf("\nCompressed Data Size: %zd", len);
+	sprintf(topic, "Altizon/Datonis/lzf/%s/event", client_id);
+	message.payload = (void *)compressedBuffer;
+	message.payloadlen = len;
+    }
+    else
+    {
 	message.payload = (void *)data;
-    message.payloadlen = strlen(data);
+        message.payloadlen = strlen(data);
+    }
     begin = get_time_ms(); 
     ret = MQTTPublish(&client, topic, &message);
     end = get_time_ms();
-    wmprintf("\nData Transmission Time: %ld\n\r", (end-begin));
+    printf("\nData Transmission Time: %lf", (end-begin));
 
     return ret;
 }
@@ -107,8 +123,8 @@ int encode_and_send_data(enum QoS qos, char *topic, char *json, int flag) {
     char *hash = get_hmac(json, buf);
     int rc;
     int cnt = 0;
-    unsigned long long t1 = get_time_ms();
-    unsigned long long t2;
+    double t1 = get_time_ms();
+    double t2;
 
     /* Remove the last curly brace */
     json[strlen(json) - 1] = '\0'; 
@@ -116,11 +132,10 @@ int encode_and_send_data(enum QoS qos, char *topic, char *json, int flag) {
     strcat(json, ",");
     putJSONStringAndComma(json, "hash", hash);
     putJSONStringAndComma(json, "access_key", configuration.access_key);
+    putJSONDoubleAndComma(json, "aliot_protocol_version", 2.0);
     json[strlen(json) - 1] = '\0'; 
     /* Now end the JSON */
     endJSON(json);
-
-    wmprintf("Transmitting json: %s\n\r", json);
 
     //printf("Json being sent: %s", json);
     rc = send_data(qos, topic, json, flag);
@@ -143,7 +158,7 @@ int encode_and_send_data(enum QoS qos, char *topic, char *json, int flag) {
     }
 
     t2 = get_time_ms();
-    wmprintf("Sent data at topic: %s in: %lld millis, retries: %d, HTTP Ack from datonis: %d\n\r", topic, (t2 - t1), cnt, http_return_code);
+    printf("Sent data at topic: %s in: %0.0f millis, retries: %d, HTTP Ack from datonis: %d\n", topic, (t2 - t1), cnt, http_return_code);
     rc = translate_http_code(http_return_code);
     return rc;
 }
@@ -181,10 +196,10 @@ void handle_instruction(MessageData *md) {
                 }
             }
         } else {
-            wmprintf("\nHash code for the instruction from the server does not match with the re-calculated one. Ignoring instruction!\n");
+            fprintf(stderr, "\nHash code for the instruction from the server does not match with the re-calculated one. Ignoring instruction!\n");
         }
     } else {
-        wmprintf("\nCould not parse the JSON content for the instruction: %s\n", buf);
+        fprintf(stderr, "\nCould not parse the JSON content for the instruction: %s\n", buf);
     }    
 }
 
@@ -200,14 +215,12 @@ int register_thing(struct thing *thing) {
         return rc;
     }
 
-    wmprintf("Done registering thing with Datonis\n\r");
-
     registered_things[registered_thing_counter++] = thing;
     if (thing->handler != NULL) {
-        wmprintf("Subscribing for instructions\n\r");
+        printf("Subscribing for instructions\n");
         sprintf(thing->instruction_topic, "Altizon/Datonis/%s/thing/%s/executeInstruction", configuration.access_key, thing->key);
         rc = MQTTSubscribe(&client, thing->instruction_topic, QOS2, handle_instruction);
-        wmprintf("Subscribe return code: %d\n\r", rc);
+        printf("Subscribe return code: %d\n", rc);
     }
 
     return rc;
