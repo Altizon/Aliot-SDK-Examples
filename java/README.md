@@ -23,13 +23,13 @@ Implementing Aliot Agent
 
 First install the SDK jar to your local mvn repository:
 
-mvn install:install-file -Dfile=lib/aliot-sdk-3.1.jar -DgroupId=io.datonis.sdk -DartifactId=aliot-sdk -Dversion=3.1 -Dpackaging=jar
+    mvn install:install-file -Dfile=lib/aliot-sdk-3.1.jar -DgroupId=io.datonis.sdk -DartifactId=aliot-sdk -Dversion=3.1 -Dpackaging=jar
 
-mvn clean install
+    mvn clean install
 
 Then, run:
 
-mvn eclipse:eclipse
+    mvn eclipse:eclipse
 
 This should generate .classpath and .project files
 Simply import the directory as an Eclipse Java project and you will be good to go.
@@ -42,7 +42,11 @@ mvn package
 
 You can then run example as follows:
 
-java -Dlog4j.properties=src/main/resources/log4j.properties -Daliot.properties=src/main/resources/aliot.properties -jar target/Aliot-SDK-Example-1.0-jar-with-dependencies.jar
+    java -Dlog4j.properties=src/main/resources/log4j.properties -Daliot.properties=src/main/resources/aliot.properties -jar target/Aliot-SDK-Example-1.0-jar-with-dependencies.jar
+
+If you are using Eclipse, add the following line in the VM Arguements Field of the Arguements tab in Run configurations.
+
+    -Dlog4j.properties=src/main/resources/log4j.properties -Daliot.properties=src/main/resources/aliot.properties
 
 Configuring the Agent
 ---------------------
