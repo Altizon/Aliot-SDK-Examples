@@ -121,15 +121,15 @@ static void datonis_demo(os_thread_arg_t data)
     int response = 0;
     response = connect_datonis();
     if (response != ERR_OK) {
-        wmprintf("Failed to connect to Datonis!\n");
+        wmprintf("Failed to connect to Datonis!\n\r");
         goto out;
     }
     response = register_thing(&t);
     if (response != ERR_OK) {
-        wmprintf("Failed to Register Thing. Response Code: %d, Error: %s\n", response, get_error_code_message(response));
+        wmprintf("Failed to Register Thing. Response Code: %d, Error: %s\n\r", response, get_error_code_message(response));
         goto out;
     } else {
-        wmprintf("Successfully Registered thing with Datonis!\n");
+        wmprintf("Successfully Registered thing with Datonis!\n\r");
     }
 
 	/* indication that device is connected and cloud is started */
@@ -194,7 +194,7 @@ void wlan_event_normal_connected(void *data)
 {
 	int ret;
 	/* Changed time to today */
-	time_t time = 1467975478;
+	time_t time = 1468002977;
 
 	wmprintf("Connected successfully to the configured network\r\n");
 
@@ -229,10 +229,15 @@ void wlan_event_normal_connected(void *data)
 }
 
 
-#define WLAN_SSID "ALTIZON2.4"
-#define WLAN_PASSWORD "AltizonWirelesS"
+//#define WLAN_SSID "ALTIZON2.4"
+//#define WLAN_PASSWORD "AltizonWirelesS"
 
 
+//#define WLAN_SSID "TWEVENT"
+//#define WLAN_PASSWORD "TWpune@1234"
+
+#define WLAN_SSID "Rajesh Jangam"
+#define WLAN_PASSWORD "12345678"
 
 int main()
 {

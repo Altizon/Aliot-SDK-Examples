@@ -13,7 +13,6 @@
 #include "jsmn.h"
 #include <string.h>
 #include <stdio.h>
-#include <wmstdio.h>
 
 char* get_hmac(const char* message, char *hmacdigest) {
 
@@ -41,7 +40,7 @@ char* get_hmac(const char* message, char *hmacdigest) {
  */
 char* get_thing_register_json(char *json, struct thing *thing) {
 	startJSON(json);
-    unsigned long long timestamp = get_time_ms();
+    double timestamp = get_time_ms();
     putJSONDoubleAndComma(json, "timestamp", timestamp);
     putJSONStringAndComma(json, "name", thing->name);
     if (thing->description)
@@ -55,7 +54,7 @@ char* get_thing_register_json(char *json, struct thing *thing) {
 
 char* get_thing_heartbeat_json(char *json, struct thing *thing) {
 
-	unsigned long long timestamp = get_time_ms();
+	double timestamp = get_time_ms();
 
 	startJSON(json);
 
@@ -105,12 +104,12 @@ char* get_thing_data_json_ts(char *json, struct thing *thing, char *value, char 
 }
 
 char* get_thing_data_json(char * json, struct thing *thing, char* value, char *waypoint) {
-	unsigned long long timestamp = get_time_ms();
+	double timestamp = get_time_ms();
     return get_thing_data_json_ts(json, thing, value, waypoint, timestamp);
 }
 
 static char *get_alert_json(char *json, struct thing *thing, char *alert_key, int level, char *message, char *data) {
-    unsigned long long timestamp = get_time_ms();
+    double timestamp = get_time_ms();
     startJSON(json);
 
     strcat(json, "\"alert\":{");
@@ -243,7 +242,7 @@ int parse_instruction_json(char *json, char *original_json, char *hash, char *th
     jsmn_init(&p);
     r = jsmn_parse(&p, json, strlen(json), tokens, 100);
     if (r < 0) {
-        wmprintf("Could not parse json: %s. Return code: %d", json, r);
+        fprintf(stderr, "Could not parse json: %s. Return code: %d", json, r);
         return r;
     } 
     strcpy(original_json, "");
@@ -253,7 +252,7 @@ int parse_instruction_json(char *json, char *original_json, char *hash, char *th
 }
 
 static int ack_handler(const char *js, jsmntok_t *t, size_t count, int *state, char *context, int *http_code) {
-    char buf[100];
+    char buf[1000];
     int i, j;
     if (count == 0) {
         return 0;
@@ -307,7 +306,7 @@ void  parse_http_ack(char *json, char *context, int *response_code) {
     jsmn_init(&p);
     r = jsmn_parse(&p, json, strlen(json), tokens, 100);
     if (r < 0) {
-        wmprintf("Could not parse json: %s. Return code: %d", json, r);
+        fprintf(stderr, "Could not parse json: %s. Return code: %d", json, r);
     }
     status = 0;
     ack_handler(json, tokens, p.toknext, &status, context, response_code);

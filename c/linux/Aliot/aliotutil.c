@@ -252,7 +252,7 @@ int parse_instruction_json(char *json, char *original_json, char *hash, char *th
 }
 
 static int ack_handler(const char *js, jsmntok_t *t, size_t count, int *state, char *context, int *http_code) {
-    char buf[100];
+    char buf[1000];
     int i, j;
     if (count == 0) {
         return 0;

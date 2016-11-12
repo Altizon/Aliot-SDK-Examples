@@ -7,6 +7,10 @@
 -include .config
 include build/aws_starter_sdk.mk
 
+
+# Change as per your need to either mqtt or http
+communication_mode := http
+
 subdir-y += sdk/external/freertos
 subdir-y += sdk/external/lwip
 subdir-y += sdk/external/datonis
