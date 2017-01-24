@@ -2,3 +2,13 @@
 *.prefs
 
 *.class
+
+*.o
+
+*.bin
+
+*.elf
+
+*.map
+
+*.log
