@@ -67,11 +67,13 @@ def main():
     # thing.bi_directional = True
     # gateway.instruction_handler = my_instruction_handler
     
-    if gateway.thing_register(thing) == False:
-        logging.error("Failed to register thing")
-        sys.exit(1)
-    else:
-        logging.info("Registered thing: " + thing.name + " with metadata: " + str(thing.data))
+    #if gateway.thing_register(thing) == False:
+        #logging.error("Failed to register thing")
+        # Continue sending data even if this is not registered
+        # Thing registration is optional to send event. Refer pivotal task number 126963443
+        #sys.exit(1)
+    #else:
+        #logging.info("Registered thing: " + thing.name + " with metadata: " + str(thing.data))
         
     if True:
         send_example_alerts(gateway, thing)

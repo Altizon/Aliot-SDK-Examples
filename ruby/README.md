@@ -4,7 +4,7 @@ Ruby - Aliot-Appliance-SDK
 Structure of the downloaded repository
 --------------------------------------
 
-If you are familiar with Git, you can pull the contents of the repository down. If not you can download the archive as a repository zip and unzip the file. Once you have the repository downloaded, the ruby folder contains the aliot-3.0.0.gem and sample ruby code sample.rb.
+If you are familiar with Git, you can pull the contents of the repository down. If not you can download the archive as a repository zip and unzip the file. Once you have the repository downloaded, the ruby folder contains the aliot-3.0.2.gem and sample ruby code sample.rb.
 
 Implementing Aliot Agent
 ------------------------
