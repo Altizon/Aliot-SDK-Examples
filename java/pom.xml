@@ -4,7 +4,7 @@
   <groupId>com.altizon.agent</groupId>
   <artifactId>Aliot-SDK-Example</artifactId>
   <packaging>jar</packaging>
-  <version>1.0</version>
+  <version>4.0.0</version>
   <name>aliot-agent</name>
   <url>http://maven.apache.org</url>
   <repositories>
@@ -47,7 +47,7 @@
     <dependency>
       <groupId>io.datonis.sdk</groupId>
       <artifactId>aliot-sdk</artifactId>
-      <version>3.1</version>
+      <version>4.0.0</version>
     </dependency>
   </dependencies>
   <build>

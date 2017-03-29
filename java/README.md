@@ -12,7 +12,7 @@ If you are familiar with Git, you can pull the contents of the repository down. 
 
 If you develop with Eclipse, the java folder contains a convenient .project and .classpath file that Eclipse understands. You can directly import the
 folder as a new project. Otherwise you will need the following jar files in your java CLASSPATH
-1. /java/lib/aliot-agent-sdk-2.0.jar
+1. /java/lib/aliot-agent-sdk-4.0.0.jar
 2. /java/lib/json_simple-1.1.jar
 3. /java/lib/mqtt-client-0.4.0.jar
 
@@ -23,7 +23,7 @@ Implementing Aliot Agent
 
 First install the SDK jar to your local mvn repository:
 
-mvn install:install-file -Dfile=lib/aliot-sdk-3.1.jar -DgroupId=io.datonis.sdk -DartifactId=aliot-sdk -Dversion=3.1 -Dpackaging=jar
+mvn install:install-file -Dfile=lib/aliot-sdk-4.0.0.jar -DgroupId=io.datonis.sdk -DartifactId=aliot-sdk -Dversion=4.0.0 -Dpackaging=jar
 
 mvn clean install
 
@@ -42,7 +42,7 @@ mvn package
 
 You can then run example as follows:
 
-java -Dlog4j.properties=src/main/resources/log4j.properties -Daliot.properties=src/main/resources/aliot.properties -jar target/Aliot-SDK-Example-1.0-jar-with-dependencies.jar
+java -Dlog4j.properties=src/main/resources/log4j.properties -Daliot.properties=src/main/resources/aliot.properties -jar target/Aliot-SDK-Example-4.0.0-jar-with-dependencies.jar
 
 Configuring the Agent
 ---------------------
