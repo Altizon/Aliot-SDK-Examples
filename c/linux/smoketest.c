@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
     }
 
     initialize(argv[2], argv[3]);
-    create_thing(&s, argv[4], argv[5], argv[6], argv[7], argv[8], execute_instruction);
+    create_thing(&s, argv[4], argv[5],  argv[7], execute_instruction);
 
     response = connect_datonis_instance(argv[1]);
     if (response != ERR_OK) {
@@ -52,8 +52,9 @@ int main(int argc, char *argv[]) {
         char packet[1024];
 	if (argc == 12) {
             create_thing_data_packet_ts(packet, &s, argv[10], argv[12], atof(argv[11]));
+        }
 	else {
-	    create_thing_data_packet_ts(packet, &s, argv[10], atof(argv[11]));
+	    create_thing_data_packet_ts(packet, &s, argv[10],NULL, atof(argv[11]));
 	}
         response = transmit_thing_data_packet(packet);
         if (response != ERR_OK) {

@@ -46,7 +46,7 @@ int main() {
     //initialize(access_key, secret_key)
     initialize("1d2fb5c369863fd54afafde654c26dtd51122t8e", "f4e31122629etaeaa48d9c8c72b8cctfc9d63acc");
     //create_thing(struct thing *thing, char* key, char* name, char* description, instruction_handler handler)
-    create_thing(&t, "7t38b9dbt9", "Compressor", "Thing for compressors", execute_instruction);
+    create_thing(&t, "6eattba747", "LivingRoom", "Example LivingRoom", execute_instruction);
 
     int response = 0;
     response = connect_datonis();
@@ -54,13 +54,14 @@ int main() {
         fprintf(stderr, "Failed to connect to Datonis!\n");
         exit(1);
     }
-    response = register_thing(&t);
+    // Thing registration is optional to send event.
+    /*response = register_thing(&t);
     if (response != ERR_OK) {
         fprintf(stderr, "Failed to Register Thing. Response Code: %d, Error: %s\n", response, get_error_code_message(response));
         exit(1);
     } else {
         printf("Successfully Registered thing with Datonis!\n");
-    }
+    }%/
 
     if (1) {
         send_example_alerts(&t);
@@ -71,7 +72,7 @@ int main() {
     int counter = 0;
     while(1) {
 
-        sprintf(buf, "{\"pressure\":%ld,\"temperature\":%ld}", random(), random());
+        sprintf(buf, "{\"temperature\":%ld,\"humidity\":%ld}", random(), random());
 	//waypoint format: [latitude, longitude], where latitude and longitude must be double values.	
 	sprintf(waypoint, "[19.%ld,73.%ld]", random() % 100000, random() % 100000);
 	//You can send both meta-data as well as waypoint in single request.
