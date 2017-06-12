@@ -87,16 +87,16 @@ def main():
             else:
                 logging.info("Heartbeat sent for thing: " + thing.name)
         data = {'temperature': math.ceil(random.uniform(0, 100)), 'humidity': math.ceil(random.uniform(0, 100))}
-	#waypoint format: [latitude, longitude]
-	waypoint = [random.uniform(18, 19), random.uniform(73, 74)]
-	#pass data as None to send only waypoint.
-	#pass waypoint as None to send only data.
-	#or pass both data and waypoint to send both of them.
-	#you can also send timestamp as fourth parameter to create_thing_event, default it will send current time.
-	thing_event = aliot_util.create_thing_event(thing, data)
-	#thing_event = aliot_util.create_thing_event(thing, None, waypoint)
-	#thing_event = aliot_util.create_thing_event(thing, data, waypoint)
-	#thing_event = aliot_util.create_thing_event(thing, data, None, int(time.time()*1000))
+        #waypoint format: [latitude, longitude]
+        waypoint = [random.uniform(18, 19), random.uniform(73, 74)]
+        #pass data as None to send only waypoint.
+        #pass waypoint as None to send only data.
+        #or pass both data and waypoint to send both of them.
+        #you can also send timestamp as fourth parameter to create_thing_event, default it will send current time.
+        thing_event = aliot_util.create_thing_event(thing, data)
+        #thing_event = aliot_util.create_thing_event(thing, None, waypoint)
+        #thing_event = aliot_util.create_thing_event(thing, data, waypoint)
+        #thing_event = aliot_util.create_thing_event(thing, data, None, int(time.time()*1000))
         if gateway.thing_event(thing_event) == True:
             logging.error("Sent event data for thing: " + str(thing_event))
         else:

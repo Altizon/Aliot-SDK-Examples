@@ -10,6 +10,10 @@ If you are familiar with Git, you can pull the contents of the repository down. 
 Implementing Aliot Agent
 ------------------------
 
+Our python agent need 'requests' module for its HTTP communication, use following command to install it.
+
+pip install requests
+
 First set the python path to point python_agent.zip file:
 
 export PYTHONPATH=$PYTHONPATH:<path_to>/python_agent.zip
