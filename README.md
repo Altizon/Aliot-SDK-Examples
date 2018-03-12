@@ -1,6 +1,20 @@
 Datonis Aliot SDK
 ===================
 
+This repository contains **deprecated** versions of Datonis SDKs
+For the latest versions, please use following links:
+* [Datonis Edge SDK for JAVA](https://github.com/Altizon/datonis-edge-sdk-java)
+* [Datonis Edge SDK for Python](https://github.com/Altizon/datonis-edge-sdk-python)
+* [Datonis Edge SDK for Ruby](https://github.com/Altizon/datonis-edge-sdk-ruby)
+* [Datonis Edge SDK for C](https://github.com/Altizon/datonis-edge-sdk-c)
+* [Datonis Edge SDK for Golang](https://github.com/Altizon/datonis-edge-sdk-go)
+
+If you need help, please create a ticket at our [Support portal](https://support.datonis.io)
+
+
+
+
+
 A repository of sample codes to push data from devices to the Datonis platform.
 Samples contain SDKs in Java, Python, Ruby and C (arduino, marvel/ARM, linux ports available)
 
